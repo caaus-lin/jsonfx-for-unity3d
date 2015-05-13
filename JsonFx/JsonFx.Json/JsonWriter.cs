@@ -1253,6 +1253,12 @@ namespace JsonFx.Json
 				}
 			}
 
+			// Ignore the auto-implemented properties
+			if (member.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), true).Length != 0)
+			{
+				return true;
+			}
+
 			return false;
 		}
 
