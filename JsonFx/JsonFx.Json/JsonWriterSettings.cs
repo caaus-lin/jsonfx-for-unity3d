@@ -56,6 +56,7 @@ namespace JsonFx.Json
 		private string tab = "\t";
 		private string typeHintName;
 		private bool useXmlSerializationAttributes;
+		private bool serachPrivate;
 		
 		#endregion Fields
 
@@ -123,6 +124,15 @@ namespace JsonFx.Json
 		{
 			get { return this.useXmlSerializationAttributes; }
 			set { this.useXmlSerializationAttributes = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets if private properties and fields should be included.
+		/// </summary>
+		public virtual bool SearchPrivate
+		{
+			get { return this.serachPrivate; }
+			set { this.serachPrivate = value; }
 		}
 
 		/// <summary>

@@ -1068,8 +1068,8 @@ namespace JsonFx.Json
 
 				bool anonymousType = type.IsGenericType && type.Name.StartsWith(JsonWriter.AnonymousTypePrefix);
 
-				// serialize public properties
-				PropertyInfo[] properties = type.GetProperties();
+				// serialize properties
+				PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 				foreach (PropertyInfo property in properties)
 				{
 					if (!property.CanRead) {
@@ -1083,8 +1083,9 @@ namespace JsonFx.Json
 							Console.WriteLine ("Cannot serialize "+property.Name+" : cannot write");
 						continue;
 					}
-					
-					if (this.IsIgnored(type, property, value)) {
+
+					var publicProperty = property.GetGetMethod(true).IsPublic;
+					if (this.IsIgnored(type, property, value, publicProperty)) {
 						if (Settings.DebugMode)
 							Console.WriteLine ("Cannot serialize "+property.Name+" : is ignored by settings");
 						continue;
@@ -1116,17 +1117,19 @@ namespace JsonFx.Json
 					this.WriteObjectProperty(propertyName, propertyValue);
 				}
 
-				// serialize public fields
-				FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+				// serialize fields
+				FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 				foreach (FieldInfo field in fields)
 				{
+					/*
 					if (field.IsStatic) {
 						if (Settings.DebugMode)
 							Console.WriteLine ("Cannot serialize "+field.Name+" : is static");
 						continue;
 					}
+					*/
 					
-					if (this.IsIgnored(type, field, value)) {
+					if (this.IsIgnored(type, field, value, field.IsPublic)) {
 						if (Settings.DebugMode)
 							Console.WriteLine ("Cannot serialize "+field.Name+" : ignored by settings");
 						continue;
@@ -1207,7 +1210,7 @@ namespace JsonFx.Json
 		/// - is flagged with the JsonIgnoreAttribute property
 		/// - has a JsonSpecifiedProperty which returns false
 		/// </remarks>
-		private bool IsIgnored(Type objType, MemberInfo member, object obj)
+		private bool IsIgnored(Type objType, MemberInfo member, object obj, bool isPublic)
 		{
 			if (JsonIgnoreAttribute.IsJsonIgnore(member))
 			{
@@ -1228,11 +1231,18 @@ namespace JsonFx.Json
 				}
 			}
 			
-			//If the class is specified as opt-in serialization only, members must have the JsonMember attribute
+			// If the class is specified as opt-in serialization only, members must have the JsonMember or JsonName
+			// attribute
 			if (objType.GetCustomAttributes (typeof(JsonOptInAttribute),true).Length != 0) {
 				if (member.GetCustomAttributes(typeof(JsonMemberAttribute),true).Length == 0) {
 					return true;
 				}
+			}
+
+			// Private variables only with JsonMember attribute will be serialized
+			if (!isPublic && !settings.SearchPrivate && member.GetCustomAttributes(typeof(JsonMemberAttribute),true).Length == 0)
+			{
+				return true;
 			}
 			
 			if (this.settings.UseXmlSerializationAttributes)
