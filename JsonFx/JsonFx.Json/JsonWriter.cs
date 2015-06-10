@@ -1073,34 +1073,44 @@ namespace JsonFx.Json
 				foreach (PropertyInfo property in properties)
 				{
 					if (!property.CanRead) {
+#if DEBUG
 						if (Settings.DebugMode)
 							Console.WriteLine ("Cannot serialize "+property.Name+" : cannot read");
+#endif
 						continue;
 					}
 					
 					if (!property.CanWrite && !anonymousType) {
+#if DEBUG
 						if (Settings.DebugMode)
 							Console.WriteLine ("Cannot serialize "+property.Name+" : cannot write");
+#endif
 						continue;
 					}
 
 					var publicProperty = property.GetGetMethod(true).IsPublic;
 					if (this.IsIgnored(type, property, value, publicProperty)) {
+#if DEBUG
 						if (Settings.DebugMode)
 							Console.WriteLine ("Cannot serialize "+property.Name+" : is ignored by settings");
+#endif
 						continue;
 					}
 					
 					if (property.GetIndexParameters ().Length != 0) {
+#if DEBUG
 						if (Settings.DebugMode)
 							Console.WriteLine ("Cannot serialize "+property.Name+" : is indexed");
+#endif
 						continue;
 					}
 					
 					object propertyValue = property.GetValue(value, null);
 					if (this.IsDefaultValue(property, propertyValue)) {
+#if DEBUG
 						if (Settings.DebugMode)
 							Console.WriteLine ("Cannot serialize "+property.Name+" : is default value");
+#endif
 						continue;
 					}
 				

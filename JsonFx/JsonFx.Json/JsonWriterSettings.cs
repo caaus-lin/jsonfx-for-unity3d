@@ -148,7 +148,9 @@ namespace JsonFx.Json
 		 * E.g about why some members are not serialized.
 		 * The number of debugging messages are in no way exhaustive
 		 */
+#if DEBUG
 		public virtual bool DebugMode { get; set; }
+#endif
 		
 		protected List<JsonConverter> converters = new List<JsonConverter>();
 		
