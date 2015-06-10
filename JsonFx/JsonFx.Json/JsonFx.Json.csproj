@@ -18,12 +18,13 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <SynchReleaseVersion>False</SynchReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -54,7 +55,6 @@
   <ItemGroup>
     <Compile Include="DataReaderProvider.cs" />
     <Compile Include="DataWriterProvider.cs" />
-    <Compile Include="XmlDataReader.cs" />
     <Compile Include="IDataReader.cs" />
     <Compile Include="EcmaScriptIdentifier.cs" />
     <Compile Include="EcmaScriptWriter.cs" />
@@ -63,7 +63,6 @@
     <Compile Include="JsonDataReader.cs" />
     <Compile Include="JsonDataWriter.cs" />
     <Compile Include="JsonIgnoreAttribute.cs" />
-    <Compile Include="JsonNameAttribute.cs" />
     <Compile Include="JsonReader.cs" />
     <Compile Include="JsonReaderSettings.cs" />
     <Compile Include="JsonSerializationException.cs" />
@@ -74,9 +73,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="TypeCoercionUtility.cs" />
-    <Compile Include="XmlDataWriter.cs" />
     <Compile Include="JsonMemberAttribute.cs" />
     <Compile Include="JsonOptInAttribute.cs" />
+    <Compile Include="JsonNameAttribute.cs" />
+    <Compile Include="DefaultJsonResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.txt">
